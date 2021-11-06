@@ -1,0 +1,26 @@
+{
+  "name": "dorayaki-factory-server",
+  "version": "1.0.0",
+  "description": "Dorayaki Factory Server using Node and REST",
+  "main": "app.ts",
+  "scripts": {
+    "build": "tsc --project ./src",
+    "start": "tsc --project ./src && node bin/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.informatika.org:if3110-2021-02-69/dorayaki-factory-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql2": "^2.3.3-rc.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^16.11.6",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
+  }
+}
