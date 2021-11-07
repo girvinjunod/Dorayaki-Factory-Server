@@ -14,19 +14,19 @@ const port = 4000
 
 var mysql = require('mysql2')
 
-// var connection = mysql.createConnection({
-//   host: 'localhost',
-//   user: 'dorayaki_admin',
-//   password: 'dorayaki',
-//   database: 'dorayaki_factory'
-// })
-
 var connection = mysql.createConnection({
-  host: 'mysql',
-  user: 'root',
-  password: 'password',
+  host: 'localhost',
+  user: 'dorayaki_admin',
+  password: 'dorayaki',
   database: 'dorayaki_factory'
 })
+
+// var connection = mysql.createConnection({
+//   host: 'mysql',
+//   user: 'root',
+//   password: 'password',
+//   database: 'dorayaki_factory'
+// })
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
