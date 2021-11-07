@@ -41,8 +41,25 @@ VALUES (1, 1, 50);
 
 -- tabel log request
 
+-- tabel user
+
+-- tabel resep-bahan baku
+CREATE TABLE user(
+    id_user INT NOT NULL AUTO_INCREMENT,
+    username TEXT NOT NULL,
+    password TEXT NOT NULL,
+    PRIMARY KEY ( id_user )
+);
+
+INSERT INTO user(username, password)
+VALUES ("pisangjerukanjing","$2b$10$K1/CWIK.BOGRGP6MlSlz7.qWuFP/7m/1fjoPRp28EwrZnWVHXO1de");
+
+
+
 CREATE USER 'dorayaki_admin'@'localhost' IDENTIFIED BY 'dorayaki';
 GRANT ALL PRIVILEGES ON dorayaki_factory. * TO 'dorayaki_admin'@'localhost';
+
+
 
 
 mysql -u dorayaki_admin -p dorayaki_factory
