@@ -19,16 +19,24 @@ var mysql = require('mysql2')
 
 var connection = mysql.createPool({
   connectionLimit: 10,
-  host: process.env.MYSQL,
+  host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DB,
 })
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Hello World! pisang')
 })
 
+app.get('/test', (req, res) => {
+  console.log("host", process.env.MYSQL_HOST)
+  console.log("user", process.env.MYSQL_USER)
+  console.log("password", process.env.MYSQL_PASSWORD)
+  console.log("database", process.env.MYSQL_DB)
+  console.log("pisang")
+  res.send('Pisang')
+})
 
 app.get('/auth', (req, res) => {
   let token = req.cookies.token
@@ -49,13 +57,14 @@ app.get('/auth', (req, res) => {
 
 app.get('/valuname', (req, res) => {
   let uname = req.query.username
-  console.log(uname)
+  console.log("username", uname)
   if (uname == ""){
     res.send({auth: false, err:"empty username"})
     
   } else {
     connection.query('SELECT * from user where username=?', [ uname ], 
     function (err, rows) {
+      console.log(rows)
       if (err){
         res.send({auth:false, err: err})
         return
