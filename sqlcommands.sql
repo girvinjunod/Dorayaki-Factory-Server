@@ -43,16 +43,17 @@ VALUES (1, 1, 50);
 
 -- tabel user
 
--- tabel resep-bahan baku
+-- tabel user
 CREATE TABLE user(
     id_user INT NOT NULL AUTO_INCREMENT,
+    email TEXT NOT NULL,
     username TEXT NOT NULL,
     password TEXT NOT NULL,
     PRIMARY KEY ( id_user )
 );
 
-INSERT INTO user(username, password)
-VALUES ("pisangjerukanjing","$2b$10$K1/CWIK.BOGRGP6MlSlz7.qWuFP/7m/1fjoPRp28EwrZnWVHXO1de");
+INSERT INTO user(email,username, password)
+VALUES ("pisangjerukanjing@gmail.com","pisangjerukanjing","$2b$10$K1/CWIK.BOGRGP6MlSlz7.qWuFP/7m/1fjoPRp28EwrZnWVHXO1de");
 
 
 

@@ -1,0 +1,5 @@
+MYSQL_HOST=mysql
+MYSQL_USER=dorayaki_admin
+MYSQL_PASSWORD=dorayaki
+MYSQL_DB=dorayaki_factory
+SECRET=pisangjerukanjing
