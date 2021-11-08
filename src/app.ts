@@ -9,24 +9,21 @@ const cookieParser = require('cookie-parser')
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(express.json())
 app.use(cookieParser())
+require("dotenv").config();
+
+
 
 const port = 4000
 
 var mysql = require('mysql2')
 
-var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'dorayaki_admin',
-  password: 'dorayaki',
-  database: 'dorayaki_factory'
+var connection = mysql.createPool({
+  connectionLimit: 10,
+  host: process.env.MYSQL,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DB,
 })
-
-// var connection = mysql.createConnection({
-//   host: 'mysql',
-//   user: 'root',
-//   password: 'password',
-//   database: 'dorayaki_factory'
-// })
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -38,7 +35,7 @@ app.get('/auth', (req, res) => {
   if (!token){
     res.send({auth: false, err: "no token"})
   } else{
-    jwt.verify(token, "pisangjerukanjing", (err, decode) => {
+    jwt.verify(token, process.env.SECRET, (err, decode) => {
       if (err){
         res.send({auth: false, err: "Failed to verify token"})
       } else{
@@ -122,7 +119,7 @@ app.post('/register', (req, res) => {
       else{
         console.log(rows)
         let id = rows.insertID
-        const token = jwt.sign({id}, "pisangjerukanjing", {
+        const token = jwt.sign({id}, process.env.SECRET, {
           expiresIn: 300
         })
         let options = {
@@ -163,7 +160,7 @@ app.post('/login', (req, res) => {
         console.log(result)
         if (result){
           const id = rows[0].id_user
-          const token = jwt.sign({id}, "pisangjerukanjing", {
+          const token = jwt.sign({id}, process.env.SECRET, {
             expiresIn: 300
           })
           console.log(id)
