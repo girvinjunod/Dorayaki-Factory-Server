@@ -51,7 +51,7 @@ app.get('/auth', (req, res) => {
       if (err){
         res.send({auth: false, err: "Failed to verify token"})
       } else{
-        console.log("verified")
+        // console.log("verified")
         res.send({auth: true})
       }
 
@@ -229,7 +229,7 @@ app.get('/getDetails', (req, res) => {
         })
         res.send({auth:true, name: name, desc:desc, material:material })
       } else{
-        res.send({auth: false})
+        res.send({auth: false, err:"No recipe found"})
       }
       return
     }
