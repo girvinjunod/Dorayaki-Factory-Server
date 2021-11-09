@@ -38,6 +38,10 @@ app.get('/test', (req, res) => {
   res.send('Pisang')
 })
 
+
+
+
+//auth token pengguna
 app.get('/auth', (req, res) => {
   let token = req.cookies.token
   if (!token){
@@ -55,6 +59,7 @@ app.get('/auth', (req, res) => {
   }
 })
 
+//validasi keunikan input username di register
 app.get('/valuname', (req, res) => {
   let uname = req.query.username
   console.log("username", uname)
@@ -80,6 +85,8 @@ app.get('/valuname', (req, res) => {
 
 })
 
+
+//register
 app.post('/register', (req, res) => {
   var uname = req.body.uname
   var email = req.body.email
@@ -152,6 +159,8 @@ app.post('/register', (req, res) => {
 })
 
 
+
+//login
 app.post('/login', (req, res) => {
   console.log(req.body)
   var uname = req.body.uname
@@ -196,6 +205,53 @@ app.post('/login', (req, res) => {
   })
   // connection.end()
 })
+
+//getAllRecipeID for path
+app.get('/getRecipeID', (req, res) => {
+  connection.query('SELECT id_recipe from recipe', 
+  function (err, rows) {
+    if (err){
+      res.send({auth: false, err: err})
+      return 
+    } 
+    let id = rows.map( (obj_id) => {
+      return {
+        params: {
+          id: obj_id.id_recipe
+        }
+      }
+    } )
+    console.log(id)
+    res.send({auth: true, id:id})
+    return
+  })
+})
+
+//getDetails
+app.get('/getDetails', (req, res) => {
+  console.log(req)
+  res.send({auth: true, msg: "tes"})
+  // connection.query('SELECT id_recipe from recipe', 
+  // function (err, rows) {
+  //   if (err){
+  //     res.send({auth: false, err: err})
+  //     return 
+  //   } 
+  //   let id = rows.map( (obj_id) => {
+  //     return {
+  //       params: {
+  //         id: obj_id.id_recipe
+  //       }
+  //     }
+  //   } )
+  //   console.log(id)
+  //   res.send({auth: true, id:id})
+  //   return
+  // })
+})
+
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

@@ -13,6 +13,9 @@ CREATE TABLE recipe(
 INSERT INTO recipe(recipe_name, recipe_desc)
 VALUES ("Apple", "Steve Jobs's secret recipe.");
 
+INSERT INTO recipe(recipe_name, recipe_desc)
+VALUES ("Generic", "They say the best dorayaki is without any flavoring at all.");
+
 -- tabel bahan baku
 CREATE TABLE material(
     id_material INT NOT NULL AUTO_INCREMENT,
@@ -36,6 +39,9 @@ CREATE TABLE recipe_material(
 
 INSERT INTO recipe_material(id_recipe, id_material, amount)
 VALUES (1, 1, 50);
+
+INSERT INTO recipe_material(id_recipe, id_material, amount)
+VALUES (2, 1, 1000);
 
 -- tabel request
 
