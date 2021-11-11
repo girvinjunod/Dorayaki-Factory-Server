@@ -207,8 +207,8 @@ app.post('/login', (req, res) => {
 })
 
 //getDetails
-app.get('/getDetails', (req, res) => {
-  let id = req.query.id
+app.get('/getDetails/:id', (req, res) => {
+  let id = req.params.id
   // console.log("id=", id)
   connection.query('select id_material, recipe_name, recipe_desc, amount, material_name from recipe natural join recipe_material natural join material where id_recipe=?', [ id ] , 
   function (err, rows) {
