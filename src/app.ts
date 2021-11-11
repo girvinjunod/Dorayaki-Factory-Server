@@ -52,12 +52,22 @@ app.get('/auth', (req, res) => {
         res.send({auth: false, err: "Failed to verify token"})
       } else{
         // console.log("verified")
-        res.send({auth: true})
+        // console.log(decode)
+        res.send({auth: true, username:decode.username})
       }
 
     })
   }
 })
+
+//logout
+app.get('/logout', (req, res) => {
+  let cookie = req.cookies
+  res.cookie('token', cookie.token, {expires: new Date(0)})
+  res.end()
+})
+
+
 
 //validasi keunikan input username di register
 app.get('/valuname', (req, res) => {
@@ -136,10 +146,10 @@ app.post('/register', (req, res) => {
         // console.log(rows)
         let id = rows.insertID
         const token = jwt.sign({id}, process.env.SECRET, {
-          expiresIn: 300
+          expiresIn: 600
         })
         let options = {
-          maxAge: 1000 * 60 * 5,
+          maxAge: 1000 * 60 * 10,
           httpOnly: true,
           sameSite: true
        }
@@ -178,15 +188,16 @@ app.post('/login', (req, res) => {
         // console.log(result)
         if (result){
           const id = rows[0].id_user
-          const token = jwt.sign({id}, process.env.SECRET, {
-            expiresIn: 300
+          const uname = rows[0].username
+          const token = jwt.sign({id:id, username: uname}, process.env.SECRET, {
+            expiresIn: 600
           })
           // console.log(id)
 
           // console.log(req.cookies) 
 
           let options = {
-              maxAge: 1000 * 60 * 5,
+              maxAge: 1000 * 60 * 10,
               httpOnly: true,
               sameSite: true
           }
