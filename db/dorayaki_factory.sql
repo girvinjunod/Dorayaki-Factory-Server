@@ -27,7 +27,7 @@ CREATE TABLE `material` (
   `material_name` text NOT NULL,
   `material_stock` int NOT NULL,
   PRIMARY KEY (`id_material`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -36,7 +36,7 @@ CREATE TABLE `material` (
 
 LOCK TABLES `material` WRITE;
 /*!40000 ALTER TABLE `material` DISABLE KEYS */;
-INSERT INTO `material` VALUES (1,'Flour',1000);
+INSERT INTO `material` VALUES (1,'Flour',1000),(2,'Apple',20);
 /*!40000 ALTER TABLE `material` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -52,7 +52,7 @@ CREATE TABLE `recipe` (
   `recipe_name` text NOT NULL,
   `recipe_desc` text,
   PRIMARY KEY (`id_recipe`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -61,7 +61,7 @@ CREATE TABLE `recipe` (
 
 LOCK TABLES `recipe` WRITE;
 /*!40000 ALTER TABLE `recipe` DISABLE KEYS */;
-INSERT INTO `recipe` VALUES (1,'Apple','Steve Jobs\'s secret recipe.');
+INSERT INTO `recipe` VALUES (1,'Apple','Steve Jobs\'s secret recipe.'),(2,'Generic','They say the best dorayaki is without any flavoring at all.');
 /*!40000 ALTER TABLE `recipe` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -89,7 +89,7 @@ CREATE TABLE `recipe_material` (
 
 LOCK TABLES `recipe_material` WRITE;
 /*!40000 ALTER TABLE `recipe_material` DISABLE KEYS */;
-INSERT INTO `recipe_material` VALUES (1,1,50);
+INSERT INTO `recipe_material` VALUES (1,1,50),(1,2,1),(2,1,1000);
 /*!40000 ALTER TABLE `recipe_material` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -128,4 +128,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-08  8:39:37
+-- Dump completed on 2021-11-09 11:51:06

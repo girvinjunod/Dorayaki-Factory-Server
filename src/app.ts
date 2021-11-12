@@ -38,6 +38,10 @@ app.get('/test', (req, res) => {
   res.send('Pisang')
 })
 
+
+
+
+//auth token pengguna
 app.get('/auth', (req, res) => {
   let token = req.cookies.token
   if (!token){
@@ -47,24 +51,35 @@ app.get('/auth', (req, res) => {
       if (err){
         res.send({auth: false, err: "Failed to verify token"})
       } else{
-        console.log("verified")
-        res.send({auth: true})
+        // console.log("verified")
+        // console.log(decode)
+        res.send({auth: true, username:decode.username})
       }
 
     })
   }
 })
 
+//logout
+app.get('/logout', (req, res) => {
+  let cookie = req.cookies
+  res.cookie('token', cookie.token, {expires: new Date(0)})
+  res.end()
+})
+
+
+
+//validasi keunikan input username di register
 app.get('/valuname', (req, res) => {
   let uname = req.query.username
-  console.log("username", uname)
+  // console.log("username", uname)
   if (uname == ""){
     res.send({auth: false, err:"empty username"})
     
   } else {
     connection.query('SELECT * from user where username=?', [ uname ], 
     function (err, rows) {
-      console.log(rows)
+      // console.log(rows)
       if (err){
         res.send({auth:false, err: err})
         return
@@ -80,6 +95,8 @@ app.get('/valuname', (req, res) => {
 
 })
 
+
+//register
 app.post('/register', (req, res) => {
   var uname = req.body.uname
   var email = req.body.email
@@ -112,27 +129,27 @@ app.post('/register', (req, res) => {
       res.send({auth: false, err: "User already exist"})
       return
     } else{
-      console.log("username unik")
+      // console.log("username unik")
       unik = true
     }
   console.log(unik)
   if (unik){
     bcrypt.hash(password, saltRounds, function(err, hash) {
-      console.log(hash)
+      // console.log(hash)
       connection.query('INSERT INTO user(email,username,password) VALUES (?,?,?)', [ email,uname,hash ], 
       function (err, rows) { 
       if (err) {
         res.send({auth: false, err: err})
-        console.log(err)
+        // console.log(err)
       }
       else{
-        console.log(rows)
+        // console.log(rows)
         let id = rows.insertID
         const token = jwt.sign({id}, process.env.SECRET, {
-          expiresIn: 300
+          expiresIn: 600
         })
         let options = {
-          maxAge: 1000 * 60 * 5,
+          maxAge: 1000 * 60 * 10,
           httpOnly: true,
           sameSite: true
        }
@@ -152,8 +169,10 @@ app.post('/register', (req, res) => {
 })
 
 
+
+//login
 app.post('/login', (req, res) => {
-  console.log(req.body)
+  // console.log(req.body)
   var uname = req.body.uname
   var pass = req.body.password
   // connection.connect()
@@ -163,21 +182,22 @@ app.post('/login', (req, res) => {
       res.send({auth: false, err: err})
       return 
     } 
-    console.log('User: ', rows)
+    // console.log('User: ', rows)
     if (rows.length > 0){
       bcrypt.compare(pass, rows[0].password, function(err, result) {
-        console.log(result)
+        // console.log(result)
         if (result){
           const id = rows[0].id_user
-          const token = jwt.sign({id}, process.env.SECRET, {
-            expiresIn: 300
+          const uname = rows[0].username
+          const token = jwt.sign({id:id, username: uname}, process.env.SECRET, {
+            expiresIn: 600
           })
-          console.log(id)
+          // console.log(id)
 
           // console.log(req.cookies) 
 
           let options = {
-              maxAge: 1000 * 60 * 5,
+              maxAge: 1000 * 60 * 10,
               httpOnly: true,
               sameSite: true
           }
@@ -196,6 +216,39 @@ app.post('/login', (req, res) => {
   })
   // connection.end()
 })
+
+//getDetails
+app.get('/getDetails/:id', (req, res) => {
+  let id = req.params.id
+  // console.log("id=", id)
+  connection.query('select id_material, recipe_name, recipe_desc, amount, material_name from recipe natural join recipe_material natural join material where id_recipe=?', [ id ] , 
+  function (err, rows) {
+    if (err){
+      res.send({auth: false, err: err})
+      return 
+    }
+    else{
+      if (rows.length > 0){
+        // console.log(rows)
+        let name = rows[0].recipe_name
+        let desc = rows[0].recipe_desc
+        let material = rows.map( (row) => {
+          return {
+            id: row.id_material,
+            mat: row.amount + " " + row.material_name
+          }
+        })
+        res.send({auth:true, name: name, desc:desc, material:material })
+      } else{
+        res.send({auth: false, err:"No recipe found"})
+      }
+      return
+    }
+  })
+})
+
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

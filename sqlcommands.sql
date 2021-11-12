@@ -13,6 +13,9 @@ CREATE TABLE recipe(
 INSERT INTO recipe(recipe_name, recipe_desc)
 VALUES ("Apple", "Steve Jobs's secret recipe.");
 
+INSERT INTO recipe(recipe_name, recipe_desc)
+VALUES ("Generic", "They say the best dorayaki is without any flavoring at all.");
+
 -- tabel bahan baku
 CREATE TABLE material(
     id_material INT NOT NULL AUTO_INCREMENT,
@@ -23,6 +26,9 @@ CREATE TABLE material(
 
 INSERT INTO material(material_name, material_stock)
 VALUES ("Flour", 1000);
+
+INSERT INTO material(material_name, material_stock)
+VALUES ("Apple", 20);
 
 -- tabel resep-bahan baku
 CREATE TABLE recipe_material(
@@ -36,6 +42,12 @@ CREATE TABLE recipe_material(
 
 INSERT INTO recipe_material(id_recipe, id_material, amount)
 VALUES (1, 1, 50);
+
+INSERT INTO recipe_material(id_recipe, id_material, amount)
+VALUES (1, 2, 1);
+
+INSERT INTO recipe_material(id_recipe, id_material, amount)
+VALUES (2, 1, 1000);
 
 -- tabel request
 
@@ -62,7 +74,7 @@ GRANT ALL PRIVILEGES ON dorayaki_factory. * TO 'dorayaki_admin'@'localhost';
 
 
 
-
+sudo /etc/init.d/mysql start
 mysql -u dorayaki_admin -p dorayaki_factory
 mysqldump -u dorayaki_admin –p dorayaki dorayaki_factory > db/dorayaki_factory.sql
 sudo mysqldump dorayaki_factory > db/dorayaki_factory.sql
