@@ -6,12 +6,14 @@ services:
       - 4000:4000
     depends_on:
       - "mysql"
+      - "redis"
     env_file: ./.env
     environment:
       - MYSQL_HOST=mysql
       - MYSQL_USER=$MYSQL_USER
       - MYSQL_PASSWORD=$MYSQL_PASSWORD
       - MYSQL_DB=$MYSQL_DB
+      - REDIS_HOST=redis
   mysql:
     image: mysql
     ports:
@@ -22,3 +24,10 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD
       - MYSQL_DATABASE=$MYSQL_DB
+  redis:
+    image: redis:alpine
+    command: redis-server
+    ports:
+      - "6379:6379"
+    
+    

@@ -1,17 +1,22 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt')
 const saltRounds = 10;
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
+const redis = require('redis');
 
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(express.json())
 app.use(cookieParser())
 require("dotenv").config();
 
-
+const redisPort = 6379
+const client = redis.createClient({
+  host: process.env.REDIS_HOST,
+  post: redisPort
+})
 
 const port = 4000
 
@@ -25,16 +30,34 @@ var connection = mysql.createPool({
   database: process.env.MYSQL_DB,
 })
 
+client.on("error", (err) => {
+  console.log("Redis")
+  console.log(err)
+})
+
+
 app.get('/', (req, res) => {
   res.send('Hello World! pisang')
 })
 
 app.get('/test', (req, res) => {
-  console.log("host", process.env.MYSQL_HOST)
-  console.log("user", process.env.MYSQL_USER)
-  console.log("password", process.env.MYSQL_PASSWORD)
-  console.log("database", process.env.MYSQL_DB)
-  console.log("pisang")
+  // console.log("host", process.env.MYSQL_HOST)
+  // console.log("user", process.env.MYSQL_USER)
+  // console.log("password", process.env.MYSQL_PASSWORD)
+  // console.log("database", process.env.MYSQL_DB)
+  // console.log("pisang")
+  // console.log(process.env.REDIS_HOST)
+  // client.get('apel', function(err, reply) {
+  //   console.log("get")
+  //   console.log(reply)
+  // })
+
+  // client.set('apel', 'jeruk', function(err, reply) {
+  //   console.log("set")
+  //   console.log(reply) // OK
+  // })
+
+
   res.send('Pisang')
 })
 
@@ -221,28 +244,62 @@ app.post('/login', (req, res) => {
 app.get('/getDetails/:id', (req, res) => {
   let id = req.params.id
   // console.log("id=", id)
-  connection.query('select id_material, recipe_name, recipe_desc, amount, material_name from recipe natural join recipe_material natural join material where id_recipe=?', [ id ] , 
-  function (err, rows) {
+  let key = 'details:'+id
+  client.get(key, function(err, reply) {
+    // console.log("get")
+    // console.log(reply)
     if (err){
-      res.send({auth: false, err: err})
-      return 
+      console.log(err)
     }
-    else{
-      if (rows.length > 0){
-        // console.log(rows)
-        let name = rows[0].recipe_name
-        let desc = rows[0].recipe_desc
-        let material = rows.map( (row) => {
-          return {
-            id: row.id_material,
-            mat: row.amount + " " + row.material_name
+    if (reply){
+      console.log("response dari cache")
+      let cachedata = JSON.parse(reply)
+      // console.log("cache data", cachedata)
+      res.send(cachedata)
+    } else{
+      connection.query('select id_material, recipe_name, recipe_desc, amount, material_name from recipe natural join recipe_material natural join material where id_recipe=?', [ id ] , 
+      function (err, rows) {
+        if (err){
+          res.send({auth: false, err: err})
+          return 
+        }
+        else{
+          if (rows.length > 0){
+            // console.log(rows)
+            let name = rows[0].recipe_name
+            let desc = rows[0].recipe_desc
+            let material = rows.map( (row) => {
+              return {
+                id: row.id_material,
+                mat: row.amount + " " + row.material_name
+              }
+            })
+            let response = {auth:true, name: name, desc:desc, material:material }
+            client.set(key, JSON.stringify(response), function(err, reply) {
+              console.log("set cache")
+              if (err){
+                console.log(err)
+              }else{
+                console.log(reply)
+              }
+            })
+            res.send(response)
+          } else{
+            let response = {auth: false, err:"No recipe found"}
+            client.set(key, JSON.stringify(response), function(err, reply) {
+              console.log("set cache")
+              if (err){
+                console.log(err)
+              }else{
+                console.log(reply)
+              }
+            })
+            res.send({auth: false, err:"No recipe found"})
           }
-        })
-        res.send({auth:true, name: name, desc:desc, material:material })
-      } else{
-        res.send({auth: false, err:"No recipe found"})
-      }
-      return
+          return
+        }
+      })
+
     }
   })
 })
