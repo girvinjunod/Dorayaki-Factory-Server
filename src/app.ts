@@ -250,12 +250,15 @@ app.get('/getDetails/:id', (req, res) => {
     // console.log(reply)
     if (err){
       console.log(err)
+      res.send({auth: false, err: err})
+      return
     }
-    if (reply){
+    else if (reply){
       console.log("response dari cache")
       let cachedata = JSON.parse(reply)
       // console.log("cache data", cachedata)
       res.send(cachedata)
+      return
     } else{
       connection.query('select id_material, recipe_name, recipe_desc, amount, material_name from recipe natural join recipe_material natural join material where id_recipe=?', [ id ] , 
       function (err, rows) {
@@ -284,6 +287,7 @@ app.get('/getDetails/:id', (req, res) => {
               }
             })
             res.send(response)
+            return
           } else{
             let response = {auth: false, err:"No recipe found"}
             client.set(key, JSON.stringify(response), function(err, reply) {
@@ -294,12 +298,11 @@ app.get('/getDetails/:id', (req, res) => {
                 console.log(reply)
               }
             })
-            res.send({auth: false, err:"No recipe found"})
+            res.send(response)
+            return
           }
-          return
         }
       })
-
     }
   })
 })
