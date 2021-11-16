@@ -284,6 +284,9 @@ app.get('/getAllMaterial', (req,res) => {
 })
 
 app.post('/addMaterial', (req,res) => {
+  if (req.body.stokMaterial){
+    res.send({err:true}) 
+  }
   connection.query('insert into material(material_name,material_stock) VALUES (?,?)', [req.body.namaMaterial,req.body.stokMaterial],
   function(err,rows){
     if (err){
@@ -298,6 +301,11 @@ app.post('/addMaterial', (req,res) => {
 
 app.post('/addRecipe', (req,res) => {
   // let insertRecipe = false;
+  for (let i=0; i<req.body.dataRecipe; i++){
+    if (req.body.dataRecipe[i].countMaterial < 0){
+      res.send({err:true}) 
+    }
+  }
   let insertId = 0;
   connection.query('insert into recipe(recipe_name,recipe_desc) VALUES (?,?)', [req.body.namaRecipe,req.body.deskripsiRecipe],
   function(err,rows){
