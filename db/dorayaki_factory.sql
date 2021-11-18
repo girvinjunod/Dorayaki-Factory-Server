@@ -16,6 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `log_request`
+--
+
+DROP TABLE IF EXISTS `log_request`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `log_request` (
+  `id_log_request` int NOT NULL AUTO_INCREMENT,
+  `ip_store` text NOT NULL,
+  `endpoint_request` text NOT NULL,
+  `time_request` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_log_request`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `log_request`
+--
+
+LOCK TABLES `log_request` WRITE;
+/*!40000 ALTER TABLE `log_request` DISABLE KEYS */;
+INSERT INTO `log_request` VALUES (1,'1.2.3.4.5','somewhere','2021-11-18 15:18:06'),(2,'1.2.3.4.5','somewhere','2021-11-18 15:47:18'),(3,'1.2.3.4.5','somewhere','2021-11-18 15:50:33');
+/*!40000 ALTER TABLE `log_request` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `material`
 --
 
@@ -27,7 +53,7 @@ CREATE TABLE `material` (
   `material_name` text NOT NULL,
   `material_stock` int NOT NULL,
   PRIMARY KEY (`id_material`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -36,7 +62,7 @@ CREATE TABLE `material` (
 
 LOCK TABLES `material` WRITE;
 /*!40000 ALTER TABLE `material` DISABLE KEYS */;
-INSERT INTO `material` VALUES (1,'Flour',1000),(2,'Apple',20);
+INSERT INTO `material` VALUES (1,'Flour',1000),(2,'Apple',20),(4,'Fish',1);
 /*!40000 ALTER TABLE `material` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -52,7 +78,7 @@ CREATE TABLE `recipe` (
   `recipe_name` text NOT NULL,
   `recipe_desc` text,
   PRIMARY KEY (`id_recipe`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,6 +120,35 @@ INSERT INTO `recipe_material` VALUES (1,1,50),(1,2,1),(2,1,1000);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `request`
+--
+
+DROP TABLE IF EXISTS `request`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `request` (
+  `id_request` int NOT NULL AUTO_INCREMENT,
+  `ip_store` text NOT NULL,
+  `status_request` text NOT NULL,
+  `id_recipe` int NOT NULL,
+  `count_request` int NOT NULL,
+  PRIMARY KEY (`id_request`),
+  KEY `id_recipe` (`id_recipe`),
+  CONSTRAINT `request_ibfk_1` FOREIGN KEY (`id_recipe`) REFERENCES `recipe` (`id_recipe`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `request`
+--
+
+LOCK TABLES `request` WRITE;
+/*!40000 ALTER TABLE `request` DISABLE KEYS */;
+INSERT INTO `request` VALUES (1,'1.2.3.4.5','WAITING',1,7),(2,'1.2.3.4.5','WAITING',1,7),(3,'1.2.3.4.5','WAITING',1,7);
+/*!40000 ALTER TABLE `request` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user`
 --
 
@@ -128,4 +183,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-09 11:51:06
+-- Dump completed on 2021-11-18 22:56:40
