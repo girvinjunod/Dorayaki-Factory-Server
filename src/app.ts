@@ -284,19 +284,22 @@ app.get('/getAllMaterial', (req,res) => {
 })
 
 app.post('/addMaterial', (req,res) => {
-  if (req.body.stokMaterial){
-    res.send({err:true}) 
-  }
-  connection.query('insert into material(material_name,material_stock) VALUES (?,?)', [req.body.namaMaterial,req.body.stokMaterial],
-  function(err,rows){
-    if (err){
-      res.send({err:true})      
-    } else{
-      console.log(rows)
-      res.send({err:false})
-    }
+  if (req.body.stokMaterial < 0){
+    res.send({err:true})
     return
-  })
+  }
+  else{
+    connection.query('insert into material(material_name,material_stock) VALUES (?,?)', [req.body.namaMaterial,req.body.stokMaterial],
+    function(err,rows){
+      if (err){
+        res.send({err:true})      
+      } else{
+        console.log(rows)
+        res.send({err:false})
+      }
+      return
+    })
+  }
 })
 
 app.post('/addRecipe', (req,res) => {
