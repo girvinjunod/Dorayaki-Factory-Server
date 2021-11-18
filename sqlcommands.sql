@@ -50,10 +50,27 @@ INSERT INTO recipe_material(id_recipe, id_material, amount)
 VALUES (2, 1, 1000);
 
 -- tabel request
+CREATE TABLE request(
+    id_request INT NOT NULL AUTO_INCREMENT,
+    ip_store TEXT NOT NULL,
+    status_request TEXT NOT NULL,
+    id_recipe INT NOT NULL,
+    count_request INT NOT NULL,
+    PRIMARY KEY ( id_request ),
+    FOREIGN KEY (id_recipe) REFERENCES recipe(id_recipe)
+);
 
 -- tabel log request
+CREATE TABLE log_request(
+    id_log_request INT NOT NULL AUTO_INCREMENT,
+    ip_store TEXT NOT NULL,
+    endpoint_request TEXT NOT NULL,
+    time_request TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY ( id_log_request )
+);
 
--- tabel user
+INSERT INTO log_request(ip_store, endpoint_request)
+VALUES ("1.2.3.4.5", "somewhere");
 
 -- tabel user
 CREATE TABLE user(
