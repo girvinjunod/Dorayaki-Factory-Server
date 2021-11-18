@@ -284,7 +284,7 @@ app.get('/getAllMaterial', (req,res) => {
 })
 
 app.post('/addMaterial', (req,res) => {
-  if (req.body.stokMaterial < 0){
+  if (req.body.stokMaterial < 0 || req.body.namaMaterial == ''){
     res.send({err:true})
     return
   }
@@ -305,7 +305,7 @@ app.post('/addMaterial', (req,res) => {
 app.post('/addRecipe', (req,res) => {
   // let insertRecipe = false;
   for (let i=0; i<req.body.dataRecipe; i++){
-    if (req.body.dataRecipe[i].countMaterial < 0){
+    if (req.body.dataRecipe[i].countMaterial < 0 || req.body.dataRecipe[i].materialName == ''){
       res.send({err:true}) 
     }
   }
