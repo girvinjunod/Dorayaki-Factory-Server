@@ -307,6 +307,98 @@ app.get('/getDetails/:id', (req, res) => {
   })
 })
 
+app.get('/getAllRecipe', (req,res) => {
+  connection.query('select * from recipe', 
+  function (err, rows) {
+    if (err){
+      res.send({auth: false, err: err})
+      return 
+    } else{
+      if (rows.length > 0){
+        console.log(rows)
+        res.send({auth: true, part: rows})
+      }else {
+        res.send({auth: false, part: 'gada resep'})
+      }
+      return
+    }
+  })
+})
+
+app.get('/getAllMaterial', (req,res) => {
+  connection.query('select * from material', 
+  function (err, rows) {
+    if (err){
+      res.send({auth: false, err: err})
+      return 
+    } else{
+      if (rows.length > 0){
+        console.log(rows)
+        res.send({auth: true, part: rows})
+      }else {
+        res.send({auth: false, part: 'gada resep'})
+      }
+      return
+    }
+  })
+})
+
+app.post('/addMaterial', (req,res) => {
+  if (req.body.stokMaterial < 0 || req.body.namaMaterial == ''){
+    res.send({err:true})
+    return
+  }
+  else{
+    connection.query('insert into material(material_name,material_stock) VALUES (?,?)', [req.body.namaMaterial,req.body.stokMaterial],
+    function(err,rows){
+      if (err){
+        res.send({err:true})      
+      } else{
+        console.log(rows)
+        res.send({err:false})
+      }
+      return
+    })
+  }
+})
+
+app.post('/addRecipe', (req,res) => {
+  if (req.body.namaRecipe == '' || req.body.deskripsiRecipe == ''){
+    res.send({err:true}) 
+    return    
+  }
+  for (let i=0; i<req.body.dataRecipe; i++){
+    if (req.body.dataRecipe[i].countMaterial < 0 || req.body.dataRecipe[i].materialName == ''){
+      res.send({err:true}) 
+      return
+    }
+  }
+  let insertId = 0;
+  connection.query('insert into recipe(recipe_name,recipe_desc) VALUES (?,?)', [req.body.namaRecipe,req.body.deskripsiRecipe],
+  function(err,rows){
+    if (err){
+      res.send({err:true})
+    }else{
+      console.log('mangga benar')
+      insertId = rows.insertId;
+      console.log(req.body.dataRecipe)
+      console.log(req.body.dataRecipe.map(item => [insertId, item.materialName, item.countMaterial]))
+      connection.query('insert into recipe_material VALUES ?', [req.body.dataRecipe.map(item => [insertId, item.materialName, item.countMaterial])],
+      function(error,rows2){
+        if (error){
+          console.log('error anjir')
+          connection.query('delete from recipe where id_recipe = ?',[insertId])
+          res.send({err:true})
+        }else{
+          console.log(rows2)
+          res.send({err:false})
+        }
+        return
+      })        
+    }
+  })
+})
+
 
 
 
