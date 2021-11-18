@@ -308,21 +308,57 @@ app.get('/getDetails/:id', (req, res) => {
 })
 
 app.get('/getAllRecipe', (req,res) => {
-  connection.query('select * from recipe', 
-  function (err, rows) {
-    if (err){
-      res.send({auth: false, err: err})
-      return 
-    } else{
-      if (rows.length > 0){
-        console.log(rows)
-        res.send({auth: true, part: rows})
-      }else {
-        res.send({auth: false, part: 'gada resep'})
+    client.get('getallrecipe', function(err, reply) {
+      console.log("get")
+      console.log(reply)
+      if (err){
+        console.log(err)
+        res.send({auth: false, err: err})
+        return
+      } else if (reply){
+        console.log("response dari cache")
+        let cachedata = JSON.parse(reply)
+        console.log("cache data", cachedata)
+        res.send(cachedata)
+        return
+      } else{
+        connection.query('select * from recipe', 
+        function (err, rows) {
+          if (err){
+            res.send({auth: false, err: err})
+            return 
+          } else{
+            if (rows.length > 0){
+              console.log(rows)
+              let response = {auth: true, part: rows}
+              client.set("getallrecipe", JSON.stringify(response), function(err, reply) {
+                console.log("set cache")
+                if (err){
+                  console.log(err)
+                }else{
+                  console.log(reply)
+                }
+              })
+              res.send(response)
+            }else {
+              let response = {auth: false, part: 'gada resep'}
+              client.set("getallrecipe", JSON.stringify(response), function(err, reply) {
+                console.log("set cache")
+                if (err){
+                  console.log(err)
+                }else{
+                  console.log(reply)
+                }
+              })
+              res.send(response)
+            }
+            return
+          }
+        })
       }
-      return
-    }
+  
   })
+
 })
 
 app.get('/getAllMaterial', (req,res) => {
@@ -386,11 +422,28 @@ app.post('/addRecipe', (req,res) => {
       connection.query('insert into recipe_material VALUES ?', [req.body.dataRecipe.map(item => [insertId, item.materialName, item.countMaterial])],
       function(error,rows2){
         if (error){
-          console.log('error anjir')
           connection.query('delete from recipe where id_recipe = ?',[insertId])
           res.send({err:true})
         }else{
           console.log(rows2)
+          connection.query('select * from recipe', 
+          function (err, rows) {
+            if (err){
+              console.log("failed to set cache")
+            } else{
+                console.log(rows)
+                let response = {auth: true, part: rows}
+                client.set("getallrecipe", JSON.stringify(response), function(err, reply) {
+                  console.log("set cache")
+                  if (err){
+                    console.log(err)
+                  }else{
+                    console.log(reply)
+                  }
+                })
+            }
+          })
+
           res.send({err:false})
         }
         return
