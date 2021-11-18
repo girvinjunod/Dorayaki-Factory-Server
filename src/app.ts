@@ -303,10 +303,14 @@ app.post('/addMaterial', (req,res) => {
 })
 
 app.post('/addRecipe', (req,res) => {
-  // let insertRecipe = false;
+  if (req.body.namaRecipe == '' || req.body.deskripsiRecipe == ''){
+    res.send({err:true}) 
+    return    
+  }
   for (let i=0; i<req.body.dataRecipe; i++){
     if (req.body.dataRecipe[i].countMaterial < 0 || req.body.dataRecipe[i].materialName == ''){
       res.send({err:true}) 
+      return
     }
   }
   let insertId = 0;
