@@ -39,8 +39,8 @@ client.on("error", (err) => {
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'girvinjunod@gmail.com',
-    // user: 'pisangjerukanjing@gmail.com',
+    // user: 'girvinjunod@gmail.com',
+    user: 'pisangjerukanjing@gmail.com',
     pass: process.env.EMAIL_PASS
   }
 });
@@ -512,9 +512,9 @@ app.post('/addRecipe', (req,res) => {
 
 app.get('/sendEmail', (req, res) => {
   let option = {
-    from: 'girvinjunod@gmail.com',
-    // from: 'pisangjerukanjing@gmail.com',
-    to: 'pisangjerukanjing@gmail.com',
+    // from: 'girvinjunod@gmail.com',
+    from: 'pisangjerukanjing@gmail.com',
+    to: 'pisangjerukanjing@gmail.com, apelkucing123@gmail.com',
     subject: 'There is a new request for dorayaki from a store!!!',
     html: '<h2>Check the website for the new request.</h2>'
   };
