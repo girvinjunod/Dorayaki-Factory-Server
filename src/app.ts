@@ -6,6 +6,7 @@ const saltRounds = 10;
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
 const redis = require('redis');
+const nodemailer = require('nodemailer')
 
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(express.json())
@@ -31,9 +32,18 @@ var connection = mysql.createPool({
 })
 
 client.on("error", (err) => {
-  console.log("Redis")
-  console.log(err)
+  console.log("Redis down")
+  // console.log(err)
 })
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    // user: 'girvinjunod@gmail.com',
+    user: 'pisangjerukanjing@gmail.com',
+    pass: process.env.EMAIL_PASS
+  }
+});
 
 
 app.get('/', (req, res) => {
@@ -245,72 +255,103 @@ app.get('/getDetails/:id', (req, res) => {
   let id = req.params.id
   // console.log("id=", id)
   let key = 'details:'+id
-  client.get(key, function(err, reply) {
-    // console.log("get")
-    // console.log(reply)
-    if (err){
-      console.log(err)
-      res.send({auth: false, err: err})
-      return
-    }
-    else if (reply){
-      console.log("response dari cache")
-      let cachedata = JSON.parse(reply)
-      // console.log("cache data", cachedata)
-      res.send(cachedata)
-      return
-    } else{
-      connection.query('select id_material, recipe_name, recipe_desc, amount, material_name from recipe natural join recipe_material natural join material where id_recipe=?', [ id ] , 
-      function (err, rows) {
-        if (err){
-          res.send({auth: false, err: err})
-          return 
-        }
-        else{
-          if (rows.length > 0){
-            // console.log(rows)
-            let name = rows[0].recipe_name
-            let desc = rows[0].recipe_desc
-            let material = rows.map( (row) => {
-              return {
-                id: row.id_material,
-                mat: row.amount + " " + row.material_name
-              }
-            })
-            let response = {auth:true, name: name, desc:desc, material:material }
-            client.set(key, JSON.stringify(response), function(err, reply) {
-              console.log("set cache")
-              if (err){
-                console.log(err)
-              }else{
-                console.log(reply)
-              }
-            })
-            res.send(response)
-            return
-          } else{
-            let response = {auth: false, err:"No recipe found"}
-            client.set(key, JSON.stringify(response), function(err, reply) {
-              console.log("set cache")
-              if (err){
-                console.log(err)
-              }else{
-                console.log(reply)
-              }
-            })
-            res.send(response)
-            return
+  if (client.connected){
+    client.get(key, function(err, reply) {
+      // console.log("get")
+      // console.log(reply)
+      if (err){
+        console.log(err)
+        res.send({auth: false, err: err})
+        return
+      }
+      else if (reply){
+        console.log("response dari cache")
+        let cachedata = JSON.parse(reply)
+        // console.log("cache data", cachedata)
+        res.send(cachedata)
+        return
+      } else{
+        connection.query('select id_material, recipe_name, recipe_desc, amount, material_name from recipe natural join recipe_material natural join material where id_recipe=?', [ id ] , 
+        function (err, rows) {
+          if (err){
+            res.send({auth: false, err: err})
+            return 
           }
-        }
-      })
-    }
-  })
+          else{
+            if (rows.length > 0){
+              // console.log(rows)
+              let name = rows[0].recipe_name
+              let desc = rows[0].recipe_desc
+              let material = rows.map( (row) => {
+                return {
+                  id: row.id_material,
+                  mat: row.amount + " " + row.material_name
+                }
+              })
+              let response = {auth:true, name: name, desc:desc, material:material }
+              client.set(key, JSON.stringify(response), function(err, reply) {
+                console.log("set cache")
+                if (err){
+                  console.log(err)
+                }else{
+                  console.log(reply)
+                }
+              })
+              res.send(response)
+              return
+            } else{
+              let response = {auth: false, err:"No recipe found"}
+              client.set(key, JSON.stringify(response), function(err, reply) {
+                console.log("set cache")
+                if (err){
+                  console.log(err)
+                }else{
+                  console.log(reply)
+                }
+              })
+              res.send(response)
+              return
+            }
+          }
+        })
+      }
+    })
+  } else{
+    connection.query('select id_material, recipe_name, recipe_desc, amount, material_name from recipe natural join recipe_material natural join material where id_recipe=?', [ id ] , 
+        function (err, rows) {
+          if (err){
+            res.send({auth: false, err: err})
+            return 
+          }
+          else{
+            if (rows.length > 0){
+              // console.log(rows)
+              let name = rows[0].recipe_name
+              let desc = rows[0].recipe_desc
+              let material = rows.map( (row) => {
+                return {
+                  id: row.id_material,
+                  mat: row.amount + " " + row.material_name
+                }
+              })
+              let response = {auth:true, name: name, desc:desc, material:material }
+              res.send(response)
+              return
+            } else{
+              let response = {auth: false, err:"No recipe found"}
+              res.send(response)
+              return
+            }
+          }
+        })
+  }
 })
 
 app.get('/getAllRecipe', (req,res) => {
+  if (client.connected){
     client.get('getallrecipe', function(err, reply) {
       console.log("get")
-      console.log(reply)
+      // console.log(reply)
       if (err){
         console.log(err)
         res.send({auth: false, err: err})
@@ -318,7 +359,7 @@ app.get('/getAllRecipe', (req,res) => {
       } else if (reply){
         console.log("response dari cache")
         let cachedata = JSON.parse(reply)
-        console.log("cache data", cachedata)
+        // console.log("cache data", cachedata)
         res.send(cachedata)
         return
       } else{
@@ -329,7 +370,7 @@ app.get('/getAllRecipe', (req,res) => {
             return 
           } else{
             if (rows.length > 0){
-              console.log(rows)
+              // console.log(rows)
               let response = {auth: true, part: rows}
               client.set("getallrecipe", JSON.stringify(response), function(err, reply) {
                 console.log("set cache")
@@ -356,9 +397,26 @@ app.get('/getAllRecipe', (req,res) => {
           }
         })
       }
-  
   })
-
+  } else{
+    connection.query('select * from recipe', 
+    function (err, rows) {
+      if (err){
+        res.send({auth: false, err: err})
+        return 
+      } else{
+        if (rows.length > 0){
+          // console.log(rows)
+          let response = {auth: true, part: rows}
+          res.send(response)
+        }else {
+          let response = {auth: false, part: 'gada resep'}
+          res.send(response)
+        }
+        return
+      }
+    })
+  }
 })
 
 app.get('/getAllMaterial', (req,res) => {
@@ -450,6 +508,26 @@ app.post('/addRecipe', (req,res) => {
       })        
     }
   })
+})
+
+app.get('/sendEmail', (req, res) => {
+  let option = {
+    // from: 'girvinjunod@gmail.com',
+    from: 'pisangjerukanjing@gmail.com',
+    to: 'pisangjerukanjing@gmail.com, apelkucing123@gmail.com',
+    subject: 'There is a new request for dorayaki from a store!!!',
+    html: '<h2>Check the website for the new request.</h2>'
+  };
+  
+  transporter.sendMail(option, (error, info) => {
+    if (error) {
+      console.log(error);
+      res.send({err:error})
+    } else {
+      console.log('Email sent: ' + info.response);
+      res.send({info:info.response})
+    }
+  });
 })
 
 
