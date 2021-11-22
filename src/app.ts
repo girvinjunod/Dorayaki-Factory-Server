@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
   res.send('Hello World! pisang')
 })
 
-app.get('/test', (req, res) => {
+app.get('/test/1', (req, res) => {
   // console.log("host", process.env.MYSQL_HOST)
   // console.log("user", process.env.MYSQL_USER)
   // console.log("password", process.env.MYSQL_PASSWORD)
@@ -390,7 +390,6 @@ app.post('/addMaterial', (req,res) => {
       if (err){
         res.send({err:true})      
       } else{
-        console.log(rows)
         res.send({err:false})
       }
       return
@@ -443,7 +442,6 @@ app.post('/addRecipe', (req,res) => {
                 })
             }
           })
-
           res.send({err:false})
         }
         return
@@ -452,7 +450,48 @@ app.post('/addRecipe', (req,res) => {
   })
 })
 
+app.get('/editMaterial/:id', (req,res) => {
+  let id = req.params.id
+  connection.query('select id_material, material_name, material_stock from material where id_material=?', [ id ] ,  
+  function (err, rows) {
+    if (err){
+      res.send({auth: false, err: err})
+      return 
+    } else{
+      if (rows.length > 0){
+        console.log(rows)
+        let name = rows[0].material_name
+        let stock = rows[0].material_stock
+        let response = {auth:true, name: name, stock:stock }
+        console.log(response)
+        
+        res.send(response)
+      } else {
+        res.send({auth: false, err: 'Material not found'})
+      }
+      return
+    }
+  })
+})
 
+app.post('/editMaterial/', (req,res) => {
+  if (req.body.stokMaterial < 0 || req.body.namaMaterial == ''){
+    res.send({err:true})
+    return
+  }
+  else{
+    connection.query('UPDATE material SET material_stock = ? WHERE material_name = ?', [req.body.stokMaterial,req.body.namaMaterial],
+    // connection.query('insert into material(material_name,material_stock) VALUES (?,?)', [req.body.namaMaterial,req.body.stokMaterial],
+    function(err,rows){
+      if (err){
+        res.send({err:true})      
+      } else{
+        res.send({err:false})
+      }
+      return
+    })
+  }
+})
 
 
 app.listen(port, () => {
