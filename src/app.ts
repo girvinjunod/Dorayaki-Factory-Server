@@ -481,7 +481,6 @@ app.post('/editMaterial/', (req,res) => {
   }
   else{
     connection.query('UPDATE material SET material_stock = ? WHERE material_name = ?', [req.body.stokMaterial,req.body.namaMaterial],
-    // connection.query('insert into material(material_name,material_stock) VALUES (?,?)', [req.body.namaMaterial,req.body.stokMaterial],
     function(err,rows){
       if (err){
         res.send({err:true})      
