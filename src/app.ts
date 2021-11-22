@@ -493,6 +493,24 @@ app.post('/editMaterial/', (req,res) => {
   }
 })
 
+app.get('/getAllRequest', (req,res) => {
+  connection.query('SELECT re.id_request, re.ip_store, re.status_request, re.count_request, r.recipe_name from request as re join recipe as r on re.id_recipe = r.id_recipe;', 
+  function (err, rows) {
+    if (err){
+      res.send({auth: false, err: err})
+      return 
+    } else{
+      if (rows.length > 0){
+        console.log(rows)
+        res.send({auth: true, part: rows})
+      }else {
+        res.send({auth: false, part: 'Tidak ada request'})
+      }
+      return
+    }
+  })
+})
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
