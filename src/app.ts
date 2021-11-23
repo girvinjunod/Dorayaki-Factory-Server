@@ -494,7 +494,7 @@ app.post('/editMaterial/', (req,res) => {
 })
 
 app.get('/getAllRequest', (req,res) => {
-  connection.query('SELECT re.id_request, re.ip_store, re.status_request, re.count_request, r.recipe_name from request as re join recipe as r on re.id_recipe = r.id_recipe;', 
+  connection.query('SELECT re.id_request, re.ip_store, re.status_request, re.count_request, r.recipe_name, m.material_name, m.material_stock, rm.amount from request as re join recipe as r on re.id_recipe = r.id_recipe join recipe_material as rm on re.id_recipe=rm.id_recipe join material as m on rm.id_material = m.id_material;', 
   function (err, rows) {
     if (err){
       res.send({auth: false, err: err})
@@ -505,6 +505,47 @@ app.get('/getAllRequest', (req,res) => {
         res.send({auth: true, part: rows})
       }else {
         res.send({auth: false, part: 'Tidak ada request'})
+      }
+      return
+    }
+  })
+})
+
+app.get('/acceptRequest/:id', (req,res) => {
+  let id = req.params.id
+  connection.query('SELECT re.id_request, re.ip_store, re.status_request, re.count_request, r.recipe_name, m.id_material, m.material_name, m.material_stock, rm.amount from request as re join recipe as r on re.id_recipe = r.id_recipe join recipe_material as rm on re.id_recipe=rm.id_recipe join material as m on rm.id_material = m.id_material where re.id_request=?;', [ id ] ,  
+  function (err, rows) {
+    if (err){
+      res.send({auth: false, err: err})
+      return 
+    } else{
+      if (rows.length > 0){
+        console.log(rows)
+        let materialId = rows[0].id_material
+        let materialAvailable = rows[0].material_stock
+        let materialNeeded = rows[0].count_request * rows[0].amount
+        if (materialAvailable >= materialNeeded) {
+          let newMaterialStock = materialAvailable - materialNeeded
+          connection.query('UPDATE material SET material_stock = ? WHERE id_material = ?', [newMaterialStock,materialId],
+          function(err,resp){
+            if (err){
+              res.send({err:true})      
+            } else{
+              res.send({err:false})
+              console.log(resp)
+            }
+            return
+          })
+        } else {
+          res.send({auth: false, err: 'Amount not sufficient'})
+          return
+        }
+        // let response = {auth:true, name: name, stock:stock }
+        // console.log(response)
+        // 
+        // res.send(response)
+      } else {
+        res.send({auth: false, err: 'Request not found'})
       }
       return
     }
