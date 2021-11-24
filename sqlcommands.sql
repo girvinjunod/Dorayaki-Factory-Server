@@ -56,9 +56,13 @@ CREATE TABLE request(
     status_request TEXT NOT NULL,
     id_recipe INT NOT NULL,
     count_request INT NOT NULL,
+    updated BOOLEAN NOT NULL,
     PRIMARY KEY ( id_request ),
     FOREIGN KEY (id_recipe) REFERENCES recipe(id_recipe)
 );
+
+INSERT INTO request(ip_store, status_request, id_recipe, count_request, updated)
+VALUES ("1.2.3.4.5", "WAITING", '1', 1, false);
 
 -- tabel log request
 CREATE TABLE log_request(
