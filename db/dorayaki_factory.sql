@@ -37,7 +37,7 @@ CREATE TABLE `log_request` (
 
 LOCK TABLES `log_request` WRITE;
 /*!40000 ALTER TABLE `log_request` DISABLE KEYS */;
-INSERT INTO `log_request` VALUES (1,'1.2.3.4.5','somewhere','2021-11-18 15:18:06'),(2,'1.2.3.4.5','somewhere','2021-11-18 15:47:18'),(3,'1.2.3.4.5','somewhere','2021-11-18 15:50:33');
+INSERT INTO `log_request` VALUES (1,'1.2.3.4.5','somewhere','2021-11-21 13:45:42'),(2,'1.2.3.4.5','somewhere','2021-11-21 13:50:47'),(3,'127.0.0.1:4040','http://localhost:8080/webservice/apelmanggakucing','2021-11-21 14:06:07');
 /*!40000 ALTER TABLE `log_request` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -78,7 +78,7 @@ CREATE TABLE `recipe` (
   `recipe_name` text NOT NULL,
   `recipe_desc` text,
   PRIMARY KEY (`id_recipe`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -87,7 +87,7 @@ CREATE TABLE `recipe` (
 
 LOCK TABLES `recipe` WRITE;
 /*!40000 ALTER TABLE `recipe` DISABLE KEYS */;
-INSERT INTO `recipe` VALUES (1,'Apple','Steve Jobs\'s secret recipe.'),(2,'Generic','They say the best dorayaki is without any flavoring at all.');
+INSERT INTO `recipe` VALUES (1,'Apple','Steve Jobs\'s secret recipe.'),(2,'Generic','They say the best dorayaki is without any flavoring at all.'),(33,'Fish','Taste of the sea');
 /*!40000 ALTER TABLE `recipe` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -115,7 +115,7 @@ CREATE TABLE `recipe_material` (
 
 LOCK TABLES `recipe_material` WRITE;
 /*!40000 ALTER TABLE `recipe_material` DISABLE KEYS */;
-INSERT INTO `recipe_material` VALUES (1,1,50),(1,2,1),(2,1,1000);
+INSERT INTO `recipe_material` VALUES (1,1,50),(1,2,1),(2,1,1000),(33,4,1);
 /*!40000 ALTER TABLE `recipe_material` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -132,6 +132,7 @@ CREATE TABLE `request` (
   `status_request` text NOT NULL,
   `id_recipe` int NOT NULL,
   `count_request` int NOT NULL,
+  `updated` tinyint(1) NOT NULL,
   PRIMARY KEY (`id_request`),
   KEY `id_recipe` (`id_recipe`),
   CONSTRAINT `request_ibfk_1` FOREIGN KEY (`id_recipe`) REFERENCES `recipe` (`id_recipe`)
@@ -144,7 +145,7 @@ CREATE TABLE `request` (
 
 LOCK TABLES `request` WRITE;
 /*!40000 ALTER TABLE `request` DISABLE KEYS */;
-INSERT INTO `request` VALUES (1,'1.2.3.4.5','WAITING',1,7),(2,'1.2.3.4.5','WAITING',1,7),(3,'1.2.3.4.5','WAITING',1,7);
+INSERT INTO `request` VALUES (1,'1.2.3.4.5','ACCEPTED',1,1,0),(2,'1.2.3.4.5','REJECTED',1,7,0),(3,'127.0.0.1:4040','WAITING',1,69,0);
 /*!40000 ALTER TABLE `request` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -183,4 +184,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-18 22:56:40
+-- Dump completed on 2021-11-21 21:09:26
