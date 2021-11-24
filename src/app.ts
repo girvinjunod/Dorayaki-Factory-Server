@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser')
 const redis = require('redis');
 const nodemailer = require('nodemailer')
 
-const whitelist= ['http://localhost:3000']
+// const whitelist= ['http://localhost:3000']
 // const corsOptions = {
 //   origin: function (origin, callback) {
 //     if (!origin || whitelist.indexOf(origin) !== -1) {
@@ -566,7 +566,7 @@ app.post('/editMaterial/', (req,res) => {
 })
 
 app.get('/getAllRequest', (req,res) => {
-  connection.query('SELECT re.id_request, re.ip_store, re.status_request, re.count_request, r.recipe_name from request as re join recipe as r on re.id_recipe = r.id_recipe;', 
+    connection.query('SELECT re.id_request, re.ip_store, re.status_request, re.count_request, r.recipe_name from request as re join recipe as r on re.id_recipe = r.id_recipe ORDER BY FIELD(status_request,"WAITING", "ACCEPTED", "REJECTED"), id_request DESC;', 
   function (err, rows) {
     if (err){
       return res.send({auth: false, err: err})
