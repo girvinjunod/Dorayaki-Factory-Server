@@ -536,7 +536,7 @@ app.post('/acceptRequest/:id', (req,res) => {
             connection.query('UPDATE material SET material_stock = ? WHERE id_material = ?', [newMaterialStock, materialId],
               function(err,resp) {
                 if (err) {
-                  return res.send({err:true})  
+                  return res.send({err:err})  
                 }
             })
           })
@@ -546,7 +546,7 @@ app.post('/acceptRequest/:id', (req,res) => {
           connection.query('UPDATE request SET status_request = ? WHERE id_request = ?', ["ACCEPTED", id],
             function(err,resp) {
               if (err) {
-                return res.send({err:true})
+                return res.send({err:err})
               } else{
                 console.log(resp)
                 return res.send({err:false})
