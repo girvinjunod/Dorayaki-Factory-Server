@@ -10,6 +10,8 @@ CREATE TABLE recipe(
     PRIMARY KEY ( id_recipe )
 );
 
+-- ALTER TABLE recipe ADD INDEX (id_recipe);
+
 INSERT INTO recipe(recipe_name, recipe_desc)
 VALUES ("Apple", "Steve Jobs's secret recipe.");
 
@@ -84,6 +86,9 @@ CREATE TABLE user(
     password TEXT NOT NULL,
     PRIMARY KEY ( id_user )
 );
+
+ALTER TABLE user MODIFY username VARCHAR(255) NOT NULL;
+ALTER TABLE user ADD INDEX (username);
 
 INSERT INTO user(email,username, password)
 VALUES ("pisangjerukanjing@gmail.com","pisangjerukanjing","$2b$10$K1/CWIK.BOGRGP6MlSlz7.qWuFP/7m/1fjoPRp28EwrZnWVHXO1de");

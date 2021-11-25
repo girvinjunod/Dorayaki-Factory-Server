@@ -160,10 +160,11 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id_user` int NOT NULL AUTO_INCREMENT,
   `email` text NOT NULL,
-  `username` text NOT NULL,
+  `username` varchar(255) NOT NULL,
   `password` text NOT NULL,
-  PRIMARY KEY (`id_user`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`id_user`),
+  KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -172,7 +173,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'pisangjerukanjing@gmail.com','pisangjerukanjing','$2b$10$K1/CWIK.BOGRGP6MlSlz7.qWuFP/7m/1fjoPRp28EwrZnWVHXO1de'),(4,'13519096@std.stei.itb.ac.id','girvinjunod','$2b$10$UsOKl5hXxql3NjNhMcSua.tfc5vdEJpp5U6kz8iGRmAf49qgFYcuG'),(6,'yudistira@yudis.yu.di.ss','siduy','$2b$10$W/sQBKKZAt9W2gNe3ca4NeQ6nBoefsAgTsXdXmOW4nJfYuiPQK9/6'),(8,'13519096@std.stei.itb.ac.id','girvinjunodddd','$2b$10$0F47gjxgWUJem3sqAdruiOoWtdc9gOgV9HYDCFvzMIcnqAQno13pu'),(9,'bella@meong.co.id','bella','$2b$10$B8/dwSBdQcs7XtTdf3ERm.QdroRRdTkxbtULBYniWtcBTdPLjn9MC'),(10,'apelmanggakucing@gmail.com','apelmanggakucing','$2b$10$h6kOZaAmUgExRIfm7lvuFObU0rOBhVQ9e85LJBRO2RUajIyiyRLPu');
+INSERT INTO `user` VALUES (1,'pisangjerukanjing@gmail.com','pisangjerukanjing','$2b$10$K1/CWIK.BOGRGP6MlSlz7.qWuFP/7m/1fjoPRp28EwrZnWVHXO1de'),(4,'13519096@std.stei.itb.ac.id','girvinjunod','$2b$10$UsOKl5hXxql3NjNhMcSua.tfc5vdEJpp5U6kz8iGRmAf49qgFYcuG'),(6,'yudistira@yudis.yu.di.ss','siduy','$2b$10$W/sQBKKZAt9W2gNe3ca4NeQ6nBoefsAgTsXdXmOW4nJfYuiPQK9/6'),(8,'13519096@std.stei.itb.ac.id','girvinjunodddd','$2b$10$0F47gjxgWUJem3sqAdruiOoWtdc9gOgV9HYDCFvzMIcnqAQno13pu'),(9,'bella@meong.co.id','bella','$2b$10$B8/dwSBdQcs7XtTdf3ERm.QdroRRdTkxbtULBYniWtcBTdPLjn9MC'),(10,'apelmanggakucing@gmail.com','apelmanggakucing','$2b$10$h6kOZaAmUgExRIfm7lvuFObU0rOBhVQ9e85LJBRO2RUajIyiyRLPu'),(11,'apelkucing123@gmail.com','apelkucing','$2b$10$bQvGQzjzaFTmnZvLwLJ9peUCcY2gLQhpW7Xq.aJ3WvO0UGXAbE4S.'),(12,'apelmanggakucing@gmail.com','apel22','$2b$10$S2Npr//wpLixFvlW...PUemF606eGaCMV1WKS/2mI0jJVFACCsIju'),(13,'apelkucing123@gmail.com','apelkucing123','$2b$10$BjbUlUQhnP3byWgXUpJpwuwz9ghau1CVYZeIobO2eG41NFkFlWYLO');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -185,4 +186,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-25 20:52:31
+-- Dump completed on 2021-11-25 22:06:44
