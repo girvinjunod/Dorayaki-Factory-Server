@@ -28,7 +28,7 @@ CREATE TABLE `log_request` (
   `endpoint_request` text NOT NULL,
   `time_request` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_log_request`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +37,7 @@ CREATE TABLE `log_request` (
 
 LOCK TABLES `log_request` WRITE;
 /*!40000 ALTER TABLE `log_request` DISABLE KEYS */;
-INSERT INTO `log_request` VALUES (1,'1.2.3.4.5','somewhere','2021-11-21 13:45:42'),(2,'1.2.3.4.5','somewhere','2021-11-21 13:50:47'),(3,'127.0.0.1:4040','http://localhost:8080/webservice/apelmanggakucing','2021-11-21 14:06:07');
+INSERT INTO `log_request` VALUES (1,'1.2.3.4.5','somewhere','2021-11-21 13:45:42'),(2,'1.2.3.4.5','somewhere','2021-11-21 13:50:47'),(3,'127.0.0.1:4040','http://localhost:8080/webservice/apelmanggakucing','2021-11-21 14:06:07'),(4,'6.6.6.6','http://0.0.0.0:8080/webservice/apelmanggakucing','2021-11-23 07:52:21'),(5,'127.0.0.1:4040','http://localhost:8080/webservice/apelmanggakucing','2021-11-24 05:37:25'),(6,'127.0.0.1:4040','http://localhost:8080/webservice/apelmanggakucing','2021-11-24 05:39:13'),(7,'127.0.0.1:4040','http://localhost:8080/webservice/apelmanggakucing','2021-11-24 05:39:44'),(8,'127.0.0.1:4040','http://localhost:8080/webservice/apelmanggakucing','2021-11-24 05:45:42'),(9,'127.0.0.1:4040','http://localhost:8080/webservice/apelmanggakucing','2021-11-24 05:45:53'),(10,'127.0.0.1:4040','http://0.0.0.0:8080/webservice/apelmanggakucing','2021-11-24 05:48:23'),(11,'127.0.0.1:4040','http://localhost:8080/webservice/apelmanggakucing','2021-11-24 05:54:37'),(12,'127.0.0.1:4040','http://localhost:8080/webservice/apelmanggakucing','2021-11-24 05:55:02'),(13,'127.0.0.1','http://localhost:8080/webservice/apelmanggakucing','2021-11-24 14:41:47'),(14,'127.0.0.1','http://localhost:8080/webservice/apelmanggakucing','2021-11-24 16:26:13'),(15,'127.0.0.1','http://localhost:8080/webservice/apelmanggakucing','2021-11-24 16:39:46'),(16,'127.0.0.1','http://localhost:8080/webservice/apelmanggakucing','2021-11-24 18:04:32'),(17,'127.0.0.1','http://localhost:8080/webservice/apelmanggakucing','2021-11-24 18:09:43'),(18,'127.0.0.1','http://localhost:8080/webservice/apelmanggakucing','2021-11-24 18:10:43');
 /*!40000 ALTER TABLE `log_request` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -62,7 +62,7 @@ CREATE TABLE `material` (
 
 LOCK TABLES `material` WRITE;
 /*!40000 ALTER TABLE `material` DISABLE KEYS */;
-INSERT INTO `material` VALUES (1,'Flour',1000),(2,'Apple',20),(4,'Fish',1);
+INSERT INTO `material` VALUES (1,'Flour',600),(2,'Apple',12),(4,'Fish',10);
 /*!40000 ALTER TABLE `material` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -133,10 +133,11 @@ CREATE TABLE `request` (
   `id_recipe` int NOT NULL,
   `count_request` int NOT NULL,
   `updated` tinyint(1) NOT NULL,
+  `created_timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_request`),
   KEY `id_recipe` (`id_recipe`),
   CONSTRAINT `request_ibfk_1` FOREIGN KEY (`id_recipe`) REFERENCES `recipe` (`id_recipe`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -145,7 +146,7 @@ CREATE TABLE `request` (
 
 LOCK TABLES `request` WRITE;
 /*!40000 ALTER TABLE `request` DISABLE KEYS */;
-INSERT INTO `request` VALUES (1,'1.2.3.4.5','ACCEPTED',1,1,0),(2,'1.2.3.4.5','REJECTED',1,7,0),(3,'127.0.0.1:4040','WAITING',1,69,0);
+INSERT INTO `request` VALUES (1,'1.2.3.4.5','ACCEPTED',1,1,0,'2021-11-25 13:45:20'),(2,'1.2.3.4.5','REJECTED',1,7,0,'2021-11-25 13:45:20'),(3,'127.0.0.1:4040','REJECTED',1,69,0,'2021-11-25 13:45:20'),(4,'6.6.6.6','REJECTED',1,5,0,'2021-11-25 13:45:20'),(10,'127.0.0.1:4040','REJECTED',1,5,0,'2021-11-25 13:45:20'),(11,'127.0.0.1:4040','ACCEPTED',1,3,0,'2021-11-25 13:45:20'),(12,'127.0.0.1:4040','REJECTED',2,5,0,'2021-11-25 13:45:20'),(13,'127.0.0.1','ACCEPTED',1,7,1,'2021-11-25 13:45:20'),(14,'127.0.0.1','ACCEPTED',1,3,1,'2021-11-25 13:45:20'),(15,'127.0.0.1','ACCEPTED',1,1,1,'2021-11-25 13:45:20'),(16,'127.0.0.1','ACCEPTED',1,4,1,'2021-11-25 13:45:20'),(17,'127.0.0.1','ACCEPTED',1,3,1,'2021-11-25 13:45:20'),(19,'1.2.327.0.0.1','REJECTED',2,10,0,'2021-11-25 13:49:56'),(20,'127.0.0.1','REJECTED',2,10,0,'2021-11-25 13:51:01');
 /*!40000 ALTER TABLE `request` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -184,4 +185,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-21 21:09:26
+-- Dump completed on 2021-11-25 20:52:31

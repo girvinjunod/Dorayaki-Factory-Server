@@ -89,6 +89,7 @@ INSERT INTO user(email,username, password)
 VALUES ("pisangjerukanjing@gmail.com","pisangjerukanjing","$2b$10$K1/CWIK.BOGRGP6MlSlz7.qWuFP/7m/1fjoPRp28EwrZnWVHXO1de");
 
 
+ALTER TABLE request ADD created_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
 CREATE USER 'dorayaki_admin'@'localhost' IDENTIFIED BY 'dorayaki';
 GRANT ALL PRIVILEGES ON dorayaki_factory. * TO 'dorayaki_admin'@'localhost';
