@@ -439,7 +439,7 @@ app.get('/getAllMaterial', (req,res) => {
       return 
     } else{
       if (rows.length > 0){
-        console.log(rows)
+        // console.log(rows)
         res.send({auth: true, part: rows})
       }else {
         res.send({auth: false, part: 'gada resep'})
@@ -485,23 +485,23 @@ app.post('/addRecipe', (req,res) => {
     if (err){
       res.send({err:true})
     }else{
-      console.log('mangga benar')
+      // console.log('mangga benar')
       insertId = rows.insertId;
-      console.log(req.body.dataRecipe)
-      console.log(req.body.dataRecipe.map(item => [insertId, item.materialName, item.countMaterial]))
+      // console.log(req.body.dataRecipe)
+      // console.log(req.body.dataRecipe.map(item => [insertId, item.materialName, item.countMaterial]))
       connection.query('insert into recipe_material VALUES ?', [req.body.dataRecipe.map(item => [insertId, item.materialName, item.countMaterial])],
       function(error,rows2){
         if (error){
           connection.query('delete from recipe where id_recipe = ?',[insertId])
           res.send({err:true})
         }else{
-          console.log(rows2)
+          // console.log(rows2)
           connection.query('select * from recipe', 
           function (err, rows) {
             if (err){
               console.log("failed to set cache")
             } else{
-                console.log(rows)
+                // console.log(rows)
                 let response = {auth: true, part: rows}
                 client.set("getallrecipe", JSON.stringify(response), function(err, reply) {
                   console.log("set cache")
@@ -566,13 +566,16 @@ app.post('/editMaterial/', (req,res) => {
 })
 
 app.get('/getAllRequest', (req,res) => {
+  console.log("Get request")
   connection.query('SELECT re.id_request, re.ip_store, re.status_request, re.count_request, r.recipe_name, DATE_FORMAT(re.created_timestamp, "%m/%d/%Y %H:%i") as created_timestamp from request as re join recipe as r on re.id_recipe = r.id_recipe ORDER BY FIELD(status_request,"WAITING", "ACCEPTED", "REJECTED"), id_request DESC;', 
   function (err, rows) {
     if (err){
+      console.log(err)
       return res.send({auth: false, err: err})
     } else{
       if (rows.length > 0){
-        console.log(rows)
+        // console.log(rows)
+        console.log("ada hasil")
         return res.send({auth: true, part: rows})
       }else {
         return res.send({auth: false, part: 'Tidak ada request'})
