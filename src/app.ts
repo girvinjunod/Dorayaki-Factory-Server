@@ -190,7 +190,7 @@ app.post('/register', (req, res) => {
       else{
         // console.log(rows)
         let id = rows.insertID
-        const token = jwt.sign({id}, process.env.SECRET, {
+        const token = jwt.sign({id:id, username: uname}, process.env.SECRET, {
           expiresIn: 600
         })
         let options = {
