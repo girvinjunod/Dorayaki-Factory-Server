@@ -494,7 +494,7 @@ app.post('/editMaterial/', (req,res) => {
 })
 
 app.get('/getAllRequest', (req,res) => {
-  connection.query('SELECT re.id_request, re.ip_store, re.status_request, re.count_request, r.recipe_name from request as re join recipe as r on re.id_recipe = r.id_recipe ORDER BY FIELD(status_request,"WAITING", "ACCEPTED", "REJECTED"), id_request DESC;', 
+  connection.query('SELECT re.id_request, re.ip_store, re.status_request, re.count_request, r.recipe_name, DATE_FORMAT(re.created_timestamp, "%m/%d/%Y %H:%i") as created_timestamp from request as re join recipe as r on re.id_recipe = r.id_recipe ORDER BY FIELD(status_request,"WAITING", "ACCEPTED", "REJECTED"), id_request DESC;', 
   function (err, rows) {
     if (err){
       return res.send({auth: false, err: err})
