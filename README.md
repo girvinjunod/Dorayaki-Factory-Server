@@ -1,8 +1,9 @@
 # Cara Menjalankan
 ## Melalui Lokal
-1. Pastikan sudah install Node.js dan npm
-2. Jalankan `npm install`
-3. Jalankan perintah `npm run start` untuk menjalankan server
+1. Pastikan sudah install Node.js, npm, MySQL, dan Redis
+2. Jalankan server MySQL dan Redis pada mesin Anda
+3. Jalankan `npm install`
+4. Jalankan perintah `npm run start` untuk menjalankan server
 
 ## Melalui Docker
 1. Pastikan sudah install Docker dan Docker Compose
