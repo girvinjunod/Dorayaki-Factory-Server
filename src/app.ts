@@ -597,11 +597,12 @@ app.post('/acceptRequest/:id', (req,res) => {
           let materialAvailable = element.material_stock
           let materialNeeded = element.count_request * element.amount
           if (materialAvailable < materialNeeded) {
-            isMaterialAvailable = false
-            return res.send({auth: false, err: 'Amount not sufficient'})
+            isMaterialAvailable = false    
           }
         })
-        
+        if (!isMaterialAvailable){
+          return res.send({auth: false, err: 'Amount not sufficient'})
+        }
         if (isMaterialAvailable) {
           rows.forEach(element => {
             let materialId = element.id_material
@@ -636,6 +637,7 @@ app.post('/acceptRequest/:id', (req,res) => {
 
 app.post('/declineRequest/:id', (req,res) => {
   let id = req.params.id
+  
   connection.query('SELECT * from request where id_request=?;', [ id ] ,  
   function (err, rows) {
     if (err) {
